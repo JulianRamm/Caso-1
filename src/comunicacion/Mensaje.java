@@ -6,6 +6,7 @@ public class Mensaje {
 	private int id;
     private Buffer buffer;
     private Cliente cliente;
+    
 	public Mensaje(int mensaje, int id, Cliente cliente) {
 		variable = mensaje;
 		this.setId(id);

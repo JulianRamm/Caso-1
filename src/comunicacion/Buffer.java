@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Buffer {
 
 	private int tamañoMaximo;
-	private int numeroCLientes;
+	private int numeroClientes;
 	private ArrayList<Mensaje> mensajesRecibidos;
 	private ArrayList<Mensaje> mensajesRespuesta;
 
 	public Buffer(int tamañoMaximo, int numeroCLientes) {
 		this.tamañoMaximo = tamañoMaximo;
-		this.numeroCLientes = numeroCLientes;
+		this.numeroClientes = numeroCLientes;
 		this.mensajesRecibidos = new ArrayList<Mensaje>(tamañoMaximo);
 		this.mensajesRespuesta = new ArrayList<Mensaje>(tamañoMaximo);
 	}
