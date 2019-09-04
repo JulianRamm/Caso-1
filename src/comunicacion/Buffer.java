@@ -1,8 +1,32 @@
 package comunicacion;
 
+import java.util.ArrayList;
+
 public class Buffer {
-	
-private Mensaje[] mensajesRecibidos;
-private Mensaje[] mensajesRespuesta;
+
+	private int tamañoMaximo;
+	private int numeroCLientes;
+	private ArrayList<Mensaje> mensajesRecibidos;
+	private ArrayList<Mensaje> mensajesRespuesta;
+
+	public Buffer(int tamañoMaximo, int numeroCLientes) {
+		this.tamañoMaximo = tamañoMaximo;
+		this.numeroCLientes = numeroCLientes;
+		this.mensajesRecibidos = new ArrayList<Mensaje>(tamañoMaximo);
+		this.mensajesRespuesta = new ArrayList<Mensaje>(tamañoMaximo);
+	}
+
+	public void almacenarMensaje(Mensaje men) {
+		mensajesRecibidos.add(men.getId(), men);
+	}
+
+	public Mensaje darMensaje() {
+		return mensajesRecibidos.remove(0);
+		
+	}
+
+	public void almacenarRespuesta(Mensaje mensaje) {
+        mensajesRespuesta.add(mensaje.getId(), mensaje);
+	}
 
 }
