@@ -1,9 +1,9 @@
 package comunicacion;
 
 public class Cliente extends Thread{
-	private int consultas;
+	private int numeroConsultas;
 
 	public Cliente(int numeroMensajes){
-		consultas=numeroMensajes;
+		numeroConsultas=numeroMensajes;
 	}
 }

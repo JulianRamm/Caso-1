@@ -4,8 +4,8 @@ public class Mensaje {
 
 	private int variable;
 
-	public Mensaje(){
-		variable=0;
+	public Mensaje(int mensaje){
+		variable = mensaje;
 	}
 
 	public void addOneToMessage(){
