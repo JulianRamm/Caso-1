@@ -31,7 +31,14 @@ public class Mensaje {
 	public int getId() {
 		return id;
 	}
-
+    public void hacerEsperar(){
+    	try {
+			cliente.wait();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 	public void setId(int id) {
 		this.id = id;
 	}
