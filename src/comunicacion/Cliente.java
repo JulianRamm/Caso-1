@@ -4,15 +4,10 @@ public class Cliente extends Thread {
 	private int numeroConsultas;
 	private Mensaje[] mensajes;
 	
-    private int menInicial = (int) (Math.random()*10000);
     
 	public Cliente(int numeroMensajes) {
 		this.numeroConsultas = numeroMensajes;
 		mensajes = new Mensaje[numeroConsultas];
-		for (int i = 0; i < mensajes.length; i++) {
-			mensajes[i]=new Mensaje(menInicial, i, this);
-			menInicial++;
-		}
 	}
 	
 	public void run(){

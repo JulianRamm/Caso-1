@@ -7,7 +7,8 @@ public class Mensaje {
     private Buffer buffer;
     private Cliente cliente;
     
-	public Mensaje(int mensaje, int id, Cliente cliente) {
+	public Mensaje(int mensaje, int id, Cliente cliente, Buffer buff) {
+        this.buffer = buff;
 		variable = mensaje;
 		this.setId(id);
 		this.setCliente(cliente);
@@ -25,6 +26,7 @@ public class Mensaje {
 		return variable;
 	}
 	public void enviarse(){
+		System.out.println("mensaje"+this.id+" esta entrando al buffer enviarse()");
 		buffer.almacenarMensaje(this);
 	}
 

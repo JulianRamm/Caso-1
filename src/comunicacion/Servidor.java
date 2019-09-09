@@ -11,7 +11,7 @@ public class Servidor extends Thread{
 	public void run(){
 		 mensaje = buffer.darMensaje();
 		 responder();
-		 System.out.println("Mensaje de id: "+mensaje.getId() + " con un valor de: "+mensaje.getVariable() + " esta siendo enviado");
+		 System.out.println("Mensaje de id: "+mensaje.getId() + " con un valor de: "+mensaje.getVariable() + " fue respondido con el valor:" + mensaje.getVariable());
 		 
 	}
 	
