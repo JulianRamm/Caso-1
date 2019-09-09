@@ -14,10 +14,10 @@ public class Buffer {
 		this.mensajesRecibidos = new ArrayList<Mensaje>(tamañoMaximo);
 	}
 
-	public void almacenarMensaje(Mensaje men) {
+	public synchronized void almacenarMensaje(Mensaje men) {
 		System.out.println("mensaje"+men.getId()+" esta entrando al buffer almacenarMensaje(men)");
 		System.out.println("nomensajes: "+noMensajes);
-		synchronized (this) {
+		 
 			while (noMensajes == tamañoMaximo) {
 				System.out.println("bufferesta lleno");
 				try {
@@ -27,7 +27,7 @@ public class Buffer {
 
 				}
 			}
-		}
+		
 		System.out.println("aqui?");
 		synchronized (men) {
 			mensajesRecibidos.add(men.getId(), men);
@@ -39,7 +39,6 @@ public class Buffer {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			noMensajes++;
 		}
 	}
 
