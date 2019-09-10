@@ -4,37 +4,43 @@ import java.util.ArrayList;
 
 public class Buffer {
 
-	private int tamañoMaximo;
+	private static int tamañoMaximo;
 	private int noMensajes = 0;
-	private ArrayList<Mensaje> mensajesRecibidos;
-	public static String ruta;
+	private static ArrayList<Mensaje> mensajesRecibidos;
+	public static String ruta = "algo";
+	private static final Buffer BUFF = new Buffer(tamañoMaximo);
 
-	public Buffer(int tamañoMaximo, int numeroClientes) {
-		this.tamañoMaximo = tamañoMaximo;
-		this.mensajesRecibidos = new ArrayList<Mensaje>(tamañoMaximo);
+	public Buffer(int tamañoMaximo) {
+		Buffer.tamañoMaximo = tamañoMaximo;
+		Buffer.mensajesRecibidos = new ArrayList<Mensaje>(tamañoMaximo);
+	}
+
+	public static Buffer getInstance() {
+		return BUFF;
 	}
 
 	public synchronized void almacenarMensaje(Mensaje men) {
-		System.out.println("mensaje"+men.getId()+" esta entrando al buffer almacenarMensaje(men)");
-		System.out.println("nomensajes: "+noMensajes);
-		 
-			while (noMensajes == tamañoMaximo) {
-				System.out.println("bufferesta lleno");
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		System.out.println("asnjklsdak");
+		System.out.println("mensaje " + men.getId() + " esta entrando al buffer almacenarMensaje(men)");
+		System.out.println("nomensajes: " + noMensajes);
+		while (noMensajes == tamañoMaximo) {
+			System.out.println("bufferesta lleno");
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 
-				}
 			}
-		
-		System.out.println("aqui?");
+		}
+		System.out.println("jueputa");
 		synchronized (men) {
+			System.out.println("????????????????");
 			mensajesRecibidos.add(men.getId(), men);
 			noMensajes++;
+			System.out.println(
+					"Se agregó el mensaje con id: " + men.getId() + " el cual tiene un valor de: " + men.getVariable());
 			try {
 				System.out.println(" revisando mensaje");
-				System.out.println(men.getId());
 				men.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -43,46 +49,47 @@ public class Buffer {
 	}
 
 	public Mensaje darMensaje() {
-		Mensaje r = new Mensaje(1, -1, null, this);
+		System.out.println("se usa?");
+		Mensaje r = new Mensaje(1, -1, null);
 		synchronized (this) {
 			while (noMensajes == 0) {
 				Thread.yield();
 			}
-			noMensajes--;
+			System.out.println("no dormir?");
 			r = mensajesRecibidos.remove(0);
+			noMensajes--;
 			r.notify();
 		}
 		return r;
 	}
+	public int getNoMensajes() {
+		return noMensajes;
+	}
 
+	public void setNoMensajes(int noMensajes) {
+		this.noMensajes = noMensajes;
+	}
+	public static String getRuta() {
+		return ruta;
+	}
+
+	public static void setRuta(String ruta) {
+		Buffer.ruta = ruta;
+	}
+	
 	public static void main(String[] args) {
 		int tamañoMaximo = 20;
 		int numeroClientes = 5;
 		int numeroServidores = 6;
 		int numeroMensajes = 2;
-		int menInicial = 0;
-		Buffer buff = new Buffer(tamañoMaximo, numeroClientes);
+		Buffer.tamañoMaximo = tamañoMaximo;
 		for (int i = 0; i < numeroServidores; i++) {
-			Servidor s = new Servidor(buff);
+			Servidor s = new Servidor();
 			s.start();
-			System.out.println("haber" + i);
 		}
-		
-		System.out.println("sateg2");
-		
 		for (int i = 0; i < numeroClientes; i++) {
-			menInicial = (int) (Math.random() * 10000);
 			Cliente c = new Cliente(numeroMensajes);
-			for (int j = 0; j < c.getMensajes().length; j++) {
-				c.getMensajes()[j] = new Mensaje(menInicial, j, c, buff);
-				menInicial++;
-			}
-			try {
-				c.start();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			System.out.println("sateg3");
+			c.start();
 
 		}
 	}
