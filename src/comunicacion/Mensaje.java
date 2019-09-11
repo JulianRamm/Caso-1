@@ -15,7 +15,7 @@ public class Mensaje {
 
 	public void addOneToMessage() {
 		buffer.notify();
-		System.out.println("El mensaje con id: " + this.id + "ha sido repondido con el valor de: " + variable);
+		System.out.println("El mensaje con id: " + this.id + "ha sido repondido con el valor de: " + variable + " el cual es perteneciente al Thread: "+cliente.getName() );
 		variable++;
 	}
 
@@ -28,7 +28,7 @@ public class Mensaje {
 	}
 
 	public void enviarse() {
-		System.out.println("mensaje " + this.id + " esta entrando al buffer enviarse()");
+		System.out.println("Mensaje " + this.id +" con valor de: "+this.variable+ " perteneciente al Thread: "+this.cliente.getName()+  " esta entrando al buffer enviarse()");
 		buffer.almacenarMensaje(this);
 	}
 

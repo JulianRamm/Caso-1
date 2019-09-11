@@ -1,18 +1,19 @@
 package comunicacion;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Buffer {
 
 	private static int tamañoMaximo;
 	private int noMensajes = 0;
-	private static ArrayList<Mensaje> mensajesRecibidos;
+	private static Queue<Mensaje> mensajesRecibidos;
 	public static String ruta = "algo";
 	private static final Buffer BUFF = new Buffer(tamañoMaximo);
 
 	public Buffer(int tamañoMaximo) {
 		Buffer.tamañoMaximo = tamañoMaximo;
-		Buffer.mensajesRecibidos = new ArrayList<Mensaje>(tamañoMaximo);
+		Buffer.mensajesRecibidos = new LinkedList<Mensaje>();
 	}
 
 	public static Buffer getInstance() {
@@ -20,8 +21,9 @@ public class Buffer {
 	}
 
 	public synchronized void almacenarMensaje(Mensaje men) {
-		System.out.println("asnjklsdak");
-		System.out.println("mensaje " + men.getId() + " esta entrando al buffer almacenarMensaje(men)");
+		System.out
+				.println("mensaje " + men.getId() + " esta entrando al buffer almacenarMensaje(men), con un valor de: "
+						+ men.getVariable() + " perteneciente al Thread: " + men.getCliente().getName());
 		System.out.println("nomensajes: " + noMensajes);
 		while (noMensajes == tamañoMaximo) {
 			System.out.println("bufferesta lleno");
@@ -32,37 +34,35 @@ public class Buffer {
 
 			}
 		}
-		System.out.println("entra?");
 		synchronized (men) {
-			System.out.println("????????????????");
-			mensajesRecibidos.add(men.getId(), men);
-			noMensajes++;
-			System.out.println(
-					"Se agregó el mensaje con id: " + men.getId() + " el cual tiene un valor de: " + men.getVariable());
-			try {
-				System.out.println(" revisando mensaje");
-				men.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			if (mensajesRecibidos.size() < tamañoMaximo) {
+				mensajesRecibidos.add(men);
+				noMensajes++;
+				System.out.println("Se agregó el mensaje con id: " + men.getId() + " el cual tiene un valor de: "
+						+ men.getVariable() + " perteneciente al Thread: " + men.getCliente().getName());
+				try {
+					men.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
 	public Mensaje darMensaje() {
-		System.out.println("se usa?");
-		Mensaje r = new Mensaje(1, -1, null);
+		Mensaje r = null;
 		while (noMensajes == 0) {
 			Thread.yield();
 		}
-		synchronized (this) {
-			
-			System.out.println("no dormir?");
-			r = mensajesRecibidos.remove(0);
+		r = mensajesRecibidos.peek();
+		synchronized (r) {
+			System.out.println("revio?");
+			r = mensajesRecibidos.remove();
 			noMensajes--;
-			r.notify();
 		}
 		return r;
 	}
+
 	public int getNoMensajes() {
 		return noMensajes;
 	}
@@ -70,6 +70,7 @@ public class Buffer {
 	public void setNoMensajes(int noMensajes) {
 		this.noMensajes = noMensajes;
 	}
+
 	public static String getRuta() {
 		return ruta;
 	}
@@ -77,7 +78,7 @@ public class Buffer {
 	public static void setRuta(String ruta) {
 		Buffer.ruta = ruta;
 	}
-	
+
 	public static void main(String[] args) {
 		int tamañoMaximo = 20;
 		int numeroClientes = 5;
@@ -89,7 +90,6 @@ public class Buffer {
 			s.start();
 
 		}
-		System.out.println("fase 2");
 		for (int i = 0; i < numeroClientes; i++) {
 			Cliente c = new Cliente(numeroMensajes);
 			c.start();

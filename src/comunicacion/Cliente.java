@@ -12,14 +12,14 @@ public class Cliente extends Thread {
 
 	public void run() {
 		for (int i = 0; i < mensajes.length; i++) {
-			mensajes[i] = new Mensaje(menInicial, i, this);
+			mensajes[i] = new Mensaje(menInicial, (int) (Math.random() * 10000), this);
 			System.out.println("Mensaje de id: " + mensajes[i].getId() + " con un valor de: "
-					+ mensajes[i].getVariable() + " esta siendo creado");
+					+ mensajes[i].getVariable() + " perteneciente al Thread: "+ this.getName()+ " esta siendo creado");
 			menInicial++;
 		}
 		for (int i = 0; i < mensajes.length; i++) {
 			System.out.println("Mensaje de id: " + mensajes[i].getId() + " con un valor de: "
-					+ mensajes[i].getVariable() + " esta siendo enviado");
+					+ mensajes[i].getVariable() +" perteneciente al Thread: "+ this.getName()+ " esta siendo enviado");
 			mensajes[i].enviarse();
 		}
 	}
