@@ -9,11 +9,13 @@ public class Servidor extends Thread {
 	}
 
 	public void run() {	
+		System.out.println("entra a run() en Servidor");
 			mensaje = buffer.darMensaje();
 			responder();
 	}
 
 	public void responder() {
+		System.out.println("entra a responder() en Servidor");
 		mensaje.addOneToMessage();
 	}
 }

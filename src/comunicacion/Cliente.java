@@ -14,10 +14,12 @@ public class Cliente extends Thread {
 		for (int i = 0; i < mensajes.length; i++) {
 			mensajes[i] = new Mensaje(menInicial, i, this);
 			System.out.println("Mensaje de id: " + mensajes[i].getId() + " con un valor de: "
-					+ mensajes[i].getVariable() + " esta siendo enviado");
+					+ mensajes[i].getVariable() + " esta siendo creado");
 			menInicial++;
 		}
 		for (int i = 0; i < mensajes.length; i++) {
+			System.out.println("Mensaje de id: " + mensajes[i].getId() + " con un valor de: "
+					+ mensajes[i].getVariable() + " esta siendo enviado");
 			mensajes[i].enviarse();
 		}
 	}

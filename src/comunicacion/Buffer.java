@@ -32,7 +32,7 @@ public class Buffer {
 
 			}
 		}
-		System.out.println("jueputa");
+		System.out.println("entra?");
 		synchronized (men) {
 			System.out.println("????????????????");
 			mensajesRecibidos.add(men.getId(), men);
@@ -51,10 +51,11 @@ public class Buffer {
 	public Mensaje darMensaje() {
 		System.out.println("se usa?");
 		Mensaje r = new Mensaje(1, -1, null);
+		while (noMensajes == 0) {
+			Thread.yield();
+		}
 		synchronized (this) {
-			while (noMensajes == 0) {
-				Thread.yield();
-			}
+			
 			System.out.println("no dormir?");
 			r = mensajesRecibidos.remove(0);
 			noMensajes--;
@@ -86,7 +87,9 @@ public class Buffer {
 		for (int i = 0; i < numeroServidores; i++) {
 			Servidor s = new Servidor();
 			s.start();
+
 		}
+		System.out.println("fase 2");
 		for (int i = 0; i < numeroClientes; i++) {
 			Cliente c = new Cliente(numeroMensajes);
 			c.start();
