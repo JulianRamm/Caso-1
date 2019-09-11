@@ -24,7 +24,6 @@ public class Servidor extends Thread {
 			} else {
 				yield();
 			}
-
 		}
 	}
 

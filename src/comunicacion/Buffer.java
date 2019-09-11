@@ -1,5 +1,6 @@
 package comunicacion;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -7,13 +8,13 @@ public class Buffer {
 
 	private static int tamañoMaximo;
 	private int noMensajes = 0;
-	private static Queue<Mensaje> mensajesRecibidos;
+	private static ArrayList<Mensaje> mensajesRecibidos;
 	public static String ruta = "algo";
 	private static final Buffer BUFF = new Buffer(tamañoMaximo);
 
 	public Buffer(int tamañoMaximo) {
 		Buffer.tamañoMaximo = tamañoMaximo;
-		Buffer.mensajesRecibidos = new LinkedList<Mensaje>();
+		Buffer.mensajesRecibidos = new ArrayList<Mensaje>();
 	}
 
 	public static Buffer getInstance() {
@@ -27,39 +28,38 @@ public class Buffer {
 		System.out.println("nomensajes: " + noMensajes);
 		while (true) {
 			synchronized (men) {
-				synchronized (men) {
-					if (mensajesRecibidos.size() < tamañoMaximo) {
-						mensajesRecibidos.add(men);
-						noMensajes++;
-						System.out.println("Se agregó el mensaje con id: " + men.getId()
-								+ " el cual tiene un valor de: " + men.getVariable() + " perteneciente al Thread: "
-								+ men.getCliente().getName());
-						try {
-							men.wait();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					} else {
-						System.out.println("bufferesta lleno");
+				if (mensajesRecibidos.size() < tamañoMaximo) {
+					mensajesRecibidos.add(men);
+					noMensajes++;
+					System.out.println("Se agregó el mensaje con id: " + men.getId() + " el cual tiene un valor de: "
+							+ men.getVariable() + " perteneciente al Thread: " + men.getCliente().getName());
+					try {
+						men.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				} else {
+					System.out.println("bufferesta lleno");
+					synchronized (this) {
 						try {
 							wait();
 						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
 							e.printStackTrace();
-
 						}
+
 					}
 				}
-
 			}
+
 		}
 	}
-
+	
 	public Mensaje darMensaje() {
 		Mensaje r = null;
 		synchronized (this) {
 			if (!(Buffer.mensajesRecibidos.isEmpty())) {
-				System.out.println("revio?");
-				r = mensajesRecibidos.remove();
+				r = mensajesRecibidos.remove(0);
 				noMensajes--;
 			}
 			notifyAll();
@@ -84,9 +84,9 @@ public class Buffer {
 	}
 
 	public static void main(String[] args) {
-		int tamañoMaximo = 1;
+		int tamañoMaximo = 3;
 		int numeroClientes = 2;
-		int numeroServidores = 1;
+		int numeroServidores = 2;
 		int numeroMensajes = 2;
 		Buffer.tamañoMaximo = tamañoMaximo;
 		for (int i = 0; i < numeroServidores; i++) {
