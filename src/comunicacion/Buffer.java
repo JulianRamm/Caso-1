@@ -9,6 +9,7 @@ public class Buffer {
 	private static int tamañoMaximo;
 	private int noMensajes = 0;
 	private static ArrayList<Mensaje> mensajesRecibidos;
+
 	public static String ruta = "algo";
 	private static final Buffer BUFF = new Buffer(tamañoMaximo);
 
