@@ -9,19 +9,23 @@ public class Servidor extends Thread {
 	}
 
 	public void run() {
-
 		while (true) {
 			mensaje = buffer.darMensaje();
 			if (mensaje != null) {
 				synchronized (mensaje) {
-					mensaje.notify();
 					System.out.println("El servidor con nombre de Thread: " + this.getName()
 							+ " esta respondiendo el mensaje con id: " + mensaje.getId()
 							+ " el cual tiene un valor de: " + mensaje.getVariable() + " perteneciente al Thread: "
 							+ mensaje.getCliente().getName());
 					responder();
+					mensaje.notify();
+					mensaje.getCliente().eliminarM(mensaje);
+                    if(buffer.getNoMensajes()==0){
+					break;
+					}
 				}
-			} else {
+			} 
+			else {
 				yield();
 			}
 		}
@@ -31,7 +35,8 @@ public class Servidor extends Thread {
 		System.out.println("entra a responder() en Servidor");
 		mensaje.addOneToMessage();
 		System.out.println("El servidor con nombre de Thread: " + this.getName() + " respondio el mensaje con id: "
-				+ mensaje.getId() + " el cual tiene un valor de: " + mensaje.getVariable()
-				+ " perteneciente al Thread: " + mensaje.getCliente().getName());
+				+ mensaje.getId() + " con un valor de: " + mensaje.getVariable() + " perteneciente al Thread: "
+				+ mensaje.getCliente().getName());
+
 	}
 }

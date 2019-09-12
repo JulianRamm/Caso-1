@@ -1,8 +1,10 @@
 package comunicacion;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Buffer {
 
@@ -10,12 +12,12 @@ public class Buffer {
 	private int noMensajes = 0;
 	private static ArrayList<Mensaje> mensajesRecibidos;
 
-	public static String ruta = "algo";
+	public static String ruta = "configuracion.txt";
 	private static final Buffer BUFF = new Buffer(tamañoMaximo);
 
 	public Buffer(int tamañoMaximo) {
 		Buffer.tamañoMaximo = tamañoMaximo;
-		Buffer.mensajesRecibidos = new ArrayList<Mensaje>();
+		Buffer.mensajesRecibidos = new ArrayList<Mensaje>(tamañoMaximo);
 	}
 
 	public static Buffer getInstance() {
@@ -45,26 +47,22 @@ public class Buffer {
 						try {
 							wait();
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-
 					}
 				}
 			}
 
 		}
 	}
-	
-	public Mensaje darMensaje() {
+
+	public synchronized Mensaje darMensaje() {
 		Mensaje r = null;
-		synchronized (this) {
-			if (!(Buffer.mensajesRecibidos.isEmpty())) {
-				r = mensajesRecibidos.remove(0);
-				noMensajes--;
-			}
-			notifyAll();
+		while (!(Buffer.mensajesRecibidos.isEmpty())) {
+			r = mensajesRecibidos.remove(0);
+			noMensajes--;
 		}
+		notifyAll();
 		return r;
 	}
 
@@ -84,11 +82,31 @@ public class Buffer {
 		Buffer.ruta = ruta;
 	}
 
-	public static void main(String[] args) {
-		int tamañoMaximo = 3;
-		int numeroClientes = 2;
-		int numeroServidores = 2;
-		int numeroMensajes = 2;
+	public static void leerArchivo(String ruta) {
+		int tamañoMaximo = 0;
+		int numeroClientes = 0;
+		int numeroServidores = 0;
+		int numeroMensajes = 0;
+		StringBuilder sb = new StringBuilder();
+		try (BufferedReader br = Files.newBufferedReader(Paths.get(ruta))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				String asd = line.split(":")[1];
+				String valorS = line.split(":")[1].substring(0, asd.length() - 1);
+				int valor = Integer.parseInt(valorS);
+				if (line.contains("Max")) {
+					tamañoMaximo = valor;
+				} else if (line.contains("Cli")) {
+					numeroClientes = valor;
+				} else if (line.contains("Serv")) {
+					numeroServidores = valor;
+				} else {
+					numeroMensajes = valor;
+				}
+			}
+		} catch (IOException e) {
+			System.err.format("IOException: %s%n", e);
+		}
 		Buffer.tamañoMaximo = tamañoMaximo;
 		for (int i = 0; i < numeroServidores; i++) {
 			Servidor s = new Servidor();
@@ -99,5 +117,10 @@ public class Buffer {
 			Cliente c = new Cliente(numeroMensajes);
 			c.start();
 		}
+	}
+
+	public static void main(String[] args) {
+		leerArchivo(Buffer.ruta);
+
 	}
 }

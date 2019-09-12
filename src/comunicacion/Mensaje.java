@@ -14,7 +14,6 @@ public class Mensaje {
 	}
 
 	public void addOneToMessage() {
-		System.out.println("El mensaje con id: " + this.id + "ha sido repondido con el valor de: " + variable + " el cual es perteneciente al Thread: "+cliente.getName() );
 		variable++;
 	}
 

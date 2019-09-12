@@ -1,0 +1,5 @@
+﻿tamañoMaximo:5;
+numeroClientes:2;
+numeroServidores:2;
+numeroServidores:2;
+numeroMensajes:2;
