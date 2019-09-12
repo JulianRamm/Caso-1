@@ -29,13 +29,14 @@ public class Buffer {
 				.println("mensaje " + men.getId() + " esta entrando al buffer almacenarMensaje(men), con un valor de: "
 						+ men.getVariable() + " perteneciente al Thread: " + men.getCliente().getName());
 		System.out.println("nomensajes: " + noMensajes);
-		while (true) {
 			synchronized (men) {
+				
 				if (mensajesRecibidos.size() < tamañoMaximo) {
 					mensajesRecibidos.add(men);
 					noMensajes++;
 					System.out.println("Se agregó el mensaje con id: " + men.getId() + " el cual tiene un valor de: "
 							+ men.getVariable() + " perteneciente al Thread: " + men.getCliente().getName());
+					System.out.println("nomensajes: " + noMensajes);
 					try {
 						men.wait();
 					} catch (InterruptedException e) {
@@ -53,7 +54,7 @@ public class Buffer {
 				}
 			}
 
-		}
+		
 	}
 
 	public synchronized Mensaje darMensaje() {
@@ -108,6 +109,7 @@ public class Buffer {
 			System.err.format("IOException: %s%n", e);
 		}
 		Buffer.tamañoMaximo = tamañoMaximo;
+		
 		for (int i = 0; i < numeroServidores; i++) {
 			Servidor s = new Servidor();
 			s.start();

@@ -19,10 +19,6 @@ public class Servidor extends Thread {
 							+ mensaje.getCliente().getName());
 					responder();
 					mensaje.notify();
-					mensaje.getCliente().eliminarM(mensaje);
-                    if(buffer.getNoMensajes()==0){
-					break;
-					}
 				}
 			} 
 			else {

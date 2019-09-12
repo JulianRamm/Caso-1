@@ -23,6 +23,7 @@ public class Cliente extends Thread {
 					.println("Mensaje de id: " + mensajes[i].getId() + " con un valor de: " + mensajes[i].getVariable()
 							+ " perteneciente al Thread: " + this.getName() + " esta siendo enviado");
 			mensajes[i].enviarse();
+			mensajes[i]=null;
 		}
 	}
 
@@ -30,14 +31,4 @@ public class Cliente extends Thread {
 		return mensajes;
 	}
 
-	public void eliminarM(Mensaje m) {
-		if (m != null) {
-			boolean eliminado = false;
-			for (int i = 0; i < mensajes.length && eliminado == false; i++) {
-				if (mensajes[i].equals(m))
-					mensajes[i] = null;
-				eliminado = true;
-			}
-		}
-	}
 }
